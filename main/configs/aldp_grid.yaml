@@ -1,0 +1,187 @@
+notes:
+  value: null # str description to log to wandb
+do_resume:
+  value: False
+wandb_id_resume:
+  value: null # wandb id of previous experiment to resume from
+wandb_checkpoint_index_resume:
+  value: null # from what checkpoint epoch to resume from
+
+## Dataset ##
+starting_dataset_path:
+  value: "./systems/aldp/datasets/starting_positions.npy"
+stride_N_samples_starting_dataset:
+  desc: Stride to use to process starting dataset.
+  value: 10
+use_N_samples_starting_dataset:
+  desc: Number of samples to use from the starting dataset.
+  value: 5000
+ground_truth_dataset_path:
+  value: "./systems/aldp/datasets/test_cartesian.npy"
+
+## Training ##
+lr_example: 
+  desc: Used for training by example.
+  value: 1.e-4
+lr_probability:
+  desc: Used for training by probability.
+  value: 1.e-4
+batch_size_probability:
+  desc: Used for training by probability.
+  value: 64
+batch_size_example:
+  desc: Used for training by example.
+  value: 256
+
+training_by_probability_gradient_clipping:
+  value:
+    clipping_value: 1.e+3 # not relevant for grid conditioning
+    clipping_value_beginning_of_iteration: 100.0 # use lower clipping value in the beginning of each iteration
+    beginning_N_epochs: 30 # not relevant for grid conditioning
+    beginning_N_epochs_first_iteration: 30 # define "beginning of iteration" for the very first iteration
+
+# Remark: Grid conditioning only has the "first" iteration!
+warmup_epochs_by_probability:
+  value: 30 # not relevant for grid conditioning
+warmup_epochs_by_probability_initial_iteration:
+  value: 30 # NO. epochs to linearly warmup lr in the beginning of the first iteration
+
+lr_decay: # Use lr decay within an iteration
+  value:
+    type: "cosine" # "cosine" or "steps"
+    steps:
+      - [50, 0.1]
+      - [70, 0.2]
+
+N_epochs_by_example:
+  desc: How many epochs to first train by example in the very beginning of the workflow
+  value: 50
+epochs_in_initial_range:
+  value: 100 # NO. epochs to train by probability in the first iteration
+
+## System ##
+temperature: 
+  value: 300.0
+do_apply_energy_regularization:
+  value: False
+energy_cut: 
+  value: null
+energy_max: 
+  value: null
+
+n_threads_local:
+  value: 16
+n_threads_cluster: # when running with slurm
+  value: 18
+
+target_system:
+  value:
+    name: "aldp"
+    system_backmapping_style: "indirect"
+CG_indices:
+  value: [17,44]
+
+## Flow ##
+flow_architecture:
+  desc: Architecture of the flow.
+  value:
+    type: "spline"
+    circ_shift: "random" # possible values: random, constant, None
+    n_blocks: 12
+    blocks_per_layer: 1 # residual blocks per layer
+    hidden_units: 256
+    num_bins: 8
+    init_identity: True # set the weights of the final layer of the parameter net to zero
+    use_float_64: True
+    dropout: 0.0
+    mixing_type: null
+    actnorm: False # Whether to include ActNorm layers
+    optimizer: "adam" # adam or sgd
+    filter_chirality: True # filter chiralities when training by probability
+    fab_filtering_threshold: 0.8
+    filtering_type: "alternative" # possible values: fab, alternative, alternative_1, none, mirror
+    dont_filter_below_10_percent: False
+    periodic_conditioning: False # use cos/sin representation to yield periodic conditioning
+    periodic_conditioning_NO_frequencies: 1
+    conditioning_standard_scaler: False
+    use_fab_periodic_conditioning: False # Use periodic representation from Midgley et al. for periodic conditioning instead of simply cos/sin
+    use_cos_sin_periodic_representation_identity: True # Use cos/sin periodic representation in residual nets (instead of the rep. from Midgley et al.)
+    skip_top_k_losses: 5 # Can be null; skip k highest losses of each batch when training by probability
+    phi_shift: 0 # shift the internal coordinate representation
+    psi_shift: 0
+
+## Ensemble ##
+free_energy_ensemble:
+  value:
+    ensemble_size: 10
+    hidden_layers: [256, 128, 32]
+    learning_rate: 0.0005
+    batch_size: 256
+    periodic_input_rep: True # use cos/sin periodic input representation
+    clipping_k: 3 # clip the top 3 values for each CG configuration when calculating the PMF
+    weight_init: "tf" # possible: "gaussian_uniform", "tf", "pytorch"
+    apply_mean_standard_scaler: False
+    apply_std_standard_scaler: False
+    strategy: "fraction" # possible: "fraction", "bagging"
+    test_dataset_fraction: 0.2
+    early_stopping: False
+NO_epochs_free_energy_training:
+  value: 1500
+
+MC_sampling: # not relevant for grid conditioning
+  value:
+    stepsize: 0.1
+    error_threshold: 0.2
+    max_time: 10800
+
+## Active learning ##
+starting_size_AL_dataset:
+  desc:  Starting size of the AL dataset (Tensor shapes).
+  value: 200000
+total_number_of_evaluations_before_adding_to_buffer:
+  value: 999999999999999 # Work in progress, can be ignored.
+resampling_probability:
+  value: 1.0 # Work in progress, can be ignored.
+multiplier_for_reevaluation:
+  desc: Multiplier with which the weight vector is multiplied for samples that are not using reweighting yet.
+  value: 1.0 # Work in progress, can be ignored.
+normalize_weight_vector:
+  value: True # Work in progress, can be ignored.
+epochs_per_iteration:
+  value: 100 # not relevant for grid conditioning
+NO_new_points_per_iteration:
+  value: 15 # not relevant for grid conditioning
+NO_MC_trajectories:
+  value: 200 # not relevant for grid conditioning
+min_NO_steps_MC_trajectories:
+  value: 0 # not relevant for grid conditioning
+fraction_trajectories_start_at_beginning:
+  value: 1.0 # not relevant for grid conditioning
+new_point_spreading: # not relevant for grid conditioning
+  value:
+    type: "uniform"
+    scale: 0.6
+    multiplier: 200
+test_dataset_fraction:
+  value: 0.2
+number_of_z_per_y:
+  value: 30 # Number of copies of each CG configuration in the dataset.
+MC_diversity_multiplier:
+  value: 2 # not relevant for grid conditioning
+
+use_grid_conditioning:
+  value: True
+grid_conditioning_N_gridpoints:
+  value: 100
+grid_conditioning_checkpoint_freq:
+  value: 10
+
+AL_termination_condition:
+  value:
+    metric_name: "forward_KL_divergence"
+    threshold: null
+
+AL_dataset_grow_settings:
+  value:
+    yield_mainly_samples_from_latest_iteration: True # otherwise we just keep growing the dataset
+    fraction_added_from_previous_iterations: 0.3 # not relevant for grid conditioning

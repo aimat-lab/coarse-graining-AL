@@ -1,0 +1,12 @@
+name: coarse_graining_ICML
+channels:
+  - conda-forge
+dependencies:
+  - python=3.8.17
+  - openmm=8.0.0
+  - openmmtools=0.23.1
+  - cudatoolkit=11.4.3
+  - mamba=1.5.1
+  - mdtraj=1.9.9
+  - pyemma=2.5.12
+  - poetry

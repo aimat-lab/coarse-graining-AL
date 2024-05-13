@@ -1,0 +1,2 @@
+[default]
+ignore_globs=models/*,additional/*,checkpoints/*/*

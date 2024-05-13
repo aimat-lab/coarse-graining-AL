@@ -1,0 +1,146 @@
+notes:
+  value: null # str description to log to wandb
+do_resume:
+  value: False
+wandb_id_resume:
+  value: null # wandb id of previous experiment to resume from
+wandb_checkpoint_index_resume:
+  value: null # from what checkpoint epoch to resume from
+
+## Dataset ##
+starting_dataset_path:
+  value: "./systems/mb/datasets/starting_positions.npy"
+use_N_samples_starting_dataset:
+  desc: Number of samples to use from the starting dataset.
+  value: 100
+
+## Training ##
+lr_example: 
+  desc: Used for training by example.
+  value: 0.0005
+lr_probability:
+  desc: Used for training by probability.
+  value: 0.005
+batch_size_probability:
+  desc: Used for training by probability.
+  value: 8
+batch_size_example:
+  desc: Used for training by example.
+  value: 16
+
+training_by_probability_gradient_clipping:
+  value:
+    clipping_value: 20.0
+    clipping_value_beginning_of_iteration: 20.0 # use lower clipping value in the beginning of each iteration
+    beginning_N_epochs: 0 # define "beginning of iteration" for all but the first iteration
+    beginning_N_epochs_first_iteration: 0 # define "beginning of iteration" for the very first iteration
+
+N_epochs_by_example:
+  desc: How many epochs to first train by example in the very beginning of the workflow
+  value: 80
+epochs_in_initial_range:
+  value: 12 # NO. epochs to train by probability in the first iteration
+
+## System ##
+beta:
+  desc: Without unit.
+  value: 0.1
+
+target_system:
+  value:
+    name: "mb"
+    system_backmapping_style: "direct"
+CG_indices:
+  value: [0,]
+
+## Flow ##
+flow_architecture:
+  desc: Architecture of the flow.
+  value:
+    type: "simple_1D"
+    subnets_dimensionality: [64, 64]
+    optimizer: "adam" # adam or sgd
+    filter_chirality: False # There is no chirality for MB
+    filtering_type: "none"
+    use_float_64: True
+    skip_top_k_losses: null
+    conditioning_standard_scaler: True
+
+## Ensemble ##
+free_energy_ensemble:
+  value:
+    ensemble_size: 10
+    hidden_layers: [64,64]
+    learning_rate: 0.001
+    batch_size: 5
+    periodic_input_rep: False
+    clipping_k: null # Can be null
+    weight_init: "gaussian_uniform" # also possible: "tf", "pytorch"
+    apply_mean_standard_scaler: True
+    apply_std_standard_scaler: True
+    strategy: "bagging" # possible: "fraction", "bagging"
+    test_dataset_fraction: 0.1
+    early_stopping: False
+    dropout_rate: 0.0
+    MC_dropout: False # Use MC dropout instead of ensemble (only possible if ensemble_size=1)
+    MC_dropout_samples: 10
+NO_epochs_free_energy_training:
+  value: 1000
+
+MC_sampling:
+  value:
+    stepsize: 0.1
+    error_threshold: 0.4 # threshold for finding new high-error configurations
+    max_iterations: 30000
+
+## Active learning ##
+starting_size_AL_dataset:
+  desc:  Starting size of the AL dataset (Tensor shapes).
+  value: 5000
+total_number_of_evaluations_before_adding_to_buffer:
+  value: 99999999999999 # Work in progress, can be ignored.
+resampling_probability:
+  value: 1.0 # Work in progress, can be ignored.
+multiplier_for_reevaluation:
+  desc: Multiplier with which the weight vector is multiplied for samples that are not using reweighting yet.
+  value: 1.0 # Work in progress, can be ignored.
+normalize_weight_vector:
+  value: True # Work in progress, can be ignored.
+epochs_per_iteration:
+  value: 7 # NO. epochs to use for each but the first iteration.
+NO_new_points_per_iteration:
+  value: 1 # NO. new points per iteration (before Gaussian broadening)
+NO_MC_trajectories:
+  value: 50 # NO. parallel trajectories to use for sampling new high-error configurations
+min_NO_steps_MC_trajectories:
+  value: 10 # Only accept high-error configurations starting from a given minimum trajectory length
+fraction_trajectories_start_at_beginning:
+  value: 0.0 # How many trajectories should be starting from the lowest minimum? The rest starts at the previous high-error configurations.
+new_point_spreading:
+  value:
+    type: "uniform" # Possible: uniform, gaussian, null
+    scale: 0.5
+    multiplier: 65
+test_dataset_fraction:
+  value: 0.2
+number_of_z_per_y:
+  value: 30 # Number of copies of each CG configuration in the dataset.
+MC_diversity_multiplier:
+  value: 1 # We search for MC_diversity_multiplier times more points and then resample them to obtain the original number of points again. See publication for details.
+
+use_grid_conditioning:
+  value: False
+grid_conditioning_N_gridpoints:
+  value: 100
+grid_conditioning_checkpoint_freq:
+  value: 10
+
+AL_termination_condition:
+  value:
+    metric_name: "forward_KL_divergence"
+    threshold: null
+
+AL_dataset_grow_settings:
+  value:
+    yield_mainly_samples_from_latest_iteration: True # otherwise we just keep growing the dataset
+    fraction_added_from_previous_iterations: 0.3 # How much data from previous iterations should be used?

@@ -1,0 +1,10 @@
+*.pyc
+__pycache__
+.vscode
+slurm-*.out
+*.dcd
+*.netcdf
+main/docs/build
+main/docs/_build
+.VSCodeCounter
+coarse_graining.egg-info
