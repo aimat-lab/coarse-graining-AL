@@ -1,10 +1,12 @@
 # Conditional normalizing flows for active learning of coarse-grained molecular representations
 
-This repository contains our implementation to use active learning to efficiently sample the CG space of molecular systems.
-This is enabled by a conditional normalizing flow that allows obtaining new free energy values in the CG space.
+*Code for the paper [Conditional Normalizing Flows for Active Learning of Coarse-Grained Molecular Representations
+](https://arxiv.org/abs/2402.01195) (ICML 2024)*
 
-This is the code repository of our paper submitted to ICML, which will be made available on GitHub if accepted.
-All code to reproduce all experiments is provided.
+This repository contains our implementation to use active learning to efficiently sample the CG space of molecular systems.
+This is enabled by a conditional normalizing flow that allows obtaining the free energy labels in the CG space.
+
+All code to reproduce the experiments in our publication is provided.
 
 <p align="center">
 <img src="overview.png" width="50%">
@@ -12,14 +14,10 @@ All code to reproduce all experiments is provided.
 
 ## Requirements
 
-Non-pip conda dependencies are listed in `environment.yaml`, poetry / pip
-dependencies are listed in `pyproject.toml`.
-
-An environment with all dependencies can be installed in two simple steps (run commands from within the root directory of the repository):
+An environment with all dependencies can be installed in the following way (run commands from within the root directory of the repository):
 
 ```bash
 conda env create -f environment.yaml
-poetry install
 ```
 
 Since we use [weights and biases](https://wandb.ai/) to track experiments, you first need 
@@ -46,7 +44,7 @@ The configuration options are explained directly in the config files, details ca
 The experiments can be started in the following way (run commands from within `./main/`):
 
 ```bash
-conda activate coarse_graining_ICML
+conda activate coarse_graining
 
 python train.py --config ./configs/selected_config.yaml
 ```

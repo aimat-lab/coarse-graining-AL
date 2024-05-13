@@ -1,4 +1,4 @@
-name: coarse_graining_ICML
+name: coarse_graining
 channels:
   - conda-forge
 dependencies:
@@ -9,4 +9,18 @@ dependencies:
   - mamba=1.5.1
   - mdtraj=1.9.9
   - pyemma=2.5.12
-  - poetry
+  - pip:
+    - torch @ https://download.pytorch.org/whl/cu117/torch-1.13.1%2Bcu117-cp38-cp38-linux_x86_64.whl
+    - wandb==0.15.5
+    - freia==0.2
+    - jupyter==1.0.0
+    - matplotlib==3.7.4
+    - tqdm==4.66.1
+    - mdanalysis==2.4.3
+    - fab @ git+https://github.com/lollcat/fab-torch.git@0c0e6f3b30928f010843e0ac66233273fecc96db
+    - nglview==3.1.1
+    - notebook==7.0.7
+    - markupsafe==2.0.1
+    - torchinfo==1.8.0
+    - yappi==1.6.0
+    - .

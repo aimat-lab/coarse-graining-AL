@@ -1,29 +1,4 @@
-[tool.poetry]
-name = "coarse-graining"
-version = "0.1.0"
-description = ""
-authors = ["Anonymous <Anonymous@Anonymous.com>"]
-license = "MIT"
-readme = "README.md"
-packages = [{include = "main"}]
-
-[tool.poetry.dependencies]
-python = "3.8.17"
-torch = { url="https://download.pytorch.org/whl/cu117/torch-1.13.1%2Bcu117-cp38-cp38-linux_x86_64.whl" }
-wandb = "0.15.5"
-freia = "^0.2"
-jupyter = "^1.0.0"
-matplotlib = "^3.7.1"
-tqdm = "^4.65.0"
-mdanalysis = "2.4.3"
-fab = { git = "https://github.com/lollcat/fab-torch.git", branch = "master", rev = "0c0e6f3b30928f010843e0ac66233273fecc96db"}
-nglview = "^3.0.7"
-notebook = "^7.0.3"
-markupsafe = "2.0.1"
-torchinfo = "^1.8.0"
-yappi = "^1.4.0"
-
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[project]
+name = "main"
+version = "1.0.0"
+dependencies = [ ]
